@@ -11,6 +11,9 @@ interface Props {
 }
 
 const App: FC = () => {
+  // const [displayTime, setDisplayTime] = useState(1 * 5)
+  // const [breakTime, setBreakTime] = useState(1 * 7)
+  // const [sessionTime, setSessionTime] = useState(25 * 60)
   const [displayTime, setDisplayTime] = useState(25 * 60)
   const [breakTime, setBreakTime] = useState(5 * 60)
   const [sessionTime, setSessionTime] = useState(25 * 60)
@@ -45,9 +48,15 @@ const App: FC = () => {
       if (breakTime <= 60 && time < 0) {
         return
       }
+      if (breakTime >= 60 * 60) {
+        return
+      }
       setBreakTime(breakTime + time)
     } else {
       if (sessionTime <= 60 && time < 0) {
+        return
+      }
+      if (sessionTime >= 60 * 60) {
         return
       }
       setSessionTime(sessionTime + time)
@@ -81,6 +90,8 @@ const App: FC = () => {
   }
 
   const resetTime = (): void => {
+    beep.pause()
+    beep.currentTime = 0
     setDisplayTime(25 * 60)
     setBreakTime(5 * 60)
     setSessionTime(25 * 60)
@@ -104,8 +115,10 @@ const App: FC = () => {
 
       <div className="timer-container">
         <div className='break-message'>{(onBreak) ? 'Break time!' : 'Work time!'}</div>
-        <div className="timer">{formatTime(displayTime)}</div>
+        <div id="timer-label">Time left:</div>
+        <div id="time-left" className="timer">{formatTime(displayTime)}</div>
         <button
+          id="start_stop"
           className="play-pause btn-small red darken-1"
           onClick={controlTime}
         >
@@ -116,6 +129,7 @@ const App: FC = () => {
           )}
         </button>
         <button
+          id="reset"
           className="play-pause btn-small red darken-1"
           onClick={resetTime}
         >
@@ -137,16 +151,18 @@ const App: FC = () => {
 const Length: FC<Props> = ({ title, changeTime, type, time, formatTime }) => {
   return (
     <div className="length-container">
-      <div>{title}</div>
+      <div id={`${type}-label`}>{title}</div>
       <div className="time-boxes">
         <button
+          id={`${type}-decrement`}
           className="btn-small red darken-1"
           onClick={() => changeTime(type, -60)}
         >
           <i className="material-icons">arrow_downward</i>
         </button>
-        <div>{formatTime(time)}</div>
+        <div id={`${type}-length`}>{formatTime(time)}</div>
         <button
+          id={`${type}-increment`}
           className="btn-small red darken-1"
           onClick={() => changeTime(type, 60)}
         >
