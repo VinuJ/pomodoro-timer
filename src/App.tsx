@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useState, useEffect } from "react"
 import "./styles.scss"
 import pomodoro from "./pomodoro.png"
 
@@ -11,11 +11,27 @@ interface Props {
 }
 
 const App: FC = () => {
-  const [displayTime, setDisplayTime] = useState(25 * 60)
-  const [breakTime, setBreakTime] = useState(5 * 60)
-  const [sessionTime, setSessionTime] = useState(25 * 60)
+  const [displayTime, setDisplayTime] = useState(1 * 10)
+  const [breakTime, setBreakTime] = useState(1 * 10)
+  const [sessionTime, setSessionTime] = useState(1 * 12)
   const [timerOn, setTimerOn] = useState(false)
   const [onBreak, setOnBreak] = useState(false)
+
+  const soundUrl = 'https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav'
+  const beep = new Audio(soundUrl)
+
+  useEffect(() => {
+    if (displayTime === 0) {
+      beep.play()
+      if (!onBreak) {
+        setDisplayTime(breakTime)
+        setOnBreak(true)
+      } else {
+        setDisplayTime(sessionTime)
+        setOnBreak(false)
+      }
+    }
+  })
 
   const formatTime = (time: number): string => {
     let minutes = Math.floor(time / 60) + ""
@@ -40,7 +56,7 @@ const App: FC = () => {
       }
     }
   }
-  let intervalId
+
   const controlTime = (): void => {
     let date = new Date().getTime()
     let nextDate = new Date().getTime() + 1000
@@ -65,13 +81,14 @@ const App: FC = () => {
   }
 
   const resetTime = (): void => {
-    console.log("resetting")
     setDisplayTime(25 * 60)
     setBreakTime(5 * 60)
     setSessionTime(25 * 60)
     setTimerOn(false)
     clearInterval(JSON.parse(localStorage.getItem("interval-id") || "{}"))
   }
+
+
 
   return (
     <div className="page-wrapper">
