@@ -101,7 +101,7 @@ const App: FC = () => {
   return (
     <div className="page-wrapper">
       <h1 className="title">Pomodoro Clock</h1>
-      <img src={pomodoro} alt="Pomodoro Timer" className="image" />
+      <img src={pomodoro} alt="Pomodoro Timer" className="image responsive-img" />
       <Length
         title={"Break Length"}
         changeTime={changeTime}
