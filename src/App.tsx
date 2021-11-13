@@ -103,6 +103,7 @@ const App: FC = () => {
       />
 
       <div className="timer-container">
+        <div className='break-message'>{(onBreak) ? 'Break time!' : 'Work time!'}</div>
         <div className="timer">{formatTime(displayTime)}</div>
         <button
           className="play-pause btn-small red darken-1"
