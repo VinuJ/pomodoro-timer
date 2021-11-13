@@ -40,27 +40,37 @@ const App: FC = () => {
       }
     }
   }
-
-  const controlTime = () => {
+  let intervalId;
+  const controlTime = (): void => {
     let date = new Date().getTime()
     let nextDate = new Date().getTime() + 1000
     if (!timerOn) {
-      let interval = setInterval(() => {
+      let interval:any = setInterval(() => {
         date = new Date().getTime()
         if (date > nextDate) {
           setDisplayTime((prev) => {
             return prev - 1
           })
+          nextDate += 1000
         }
-        nextDate += 1000
       }, 30)
+      localStorage.clear()
+      localStorage.setItem('interval-id', interval)
     }
+    if (timerOn) {
+      clearInterval(JSON.parse(localStorage.getItem('interval-id') || '{}'))
+    }
+
+    setTimerOn(!timerOn)
   }
 
-  const resetTime = () => {
+  const resetTime = ():void => {
+    console.log('resetting')
     setDisplayTime(25 * 60)
     setBreakTime(5 * 60)
     setSessionTime(25 * 60)
+    setTimerOn(false)
+    clearInterval(JSON.parse(localStorage.getItem('interval-id') || '{}'))
   }
 
   return (
@@ -79,7 +89,7 @@ const App: FC = () => {
         <div className="timer">{formatTime(displayTime)}</div>
         <button
           className="play-pause btn-small red darken-1"
-          onClick={() => controlTime}
+          onClick={controlTime}
         >
           {timerOn ? (
             <i className="material-icons">pause</i>
