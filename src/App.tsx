@@ -40,12 +40,12 @@ const App: FC = () => {
       }
     }
   }
-  let intervalId;
+  let intervalId
   const controlTime = (): void => {
     let date = new Date().getTime()
     let nextDate = new Date().getTime() + 1000
     if (!timerOn) {
-      let interval:any = setInterval(() => {
+      let interval: any = setInterval(() => {
         date = new Date().getTime()
         if (date > nextDate) {
           setDisplayTime((prev) => {
@@ -55,22 +55,22 @@ const App: FC = () => {
         }
       }, 30)
       localStorage.clear()
-      localStorage.setItem('interval-id', interval)
+      localStorage.setItem("interval-id", interval)
     }
     if (timerOn) {
-      clearInterval(JSON.parse(localStorage.getItem('interval-id') || '{}'))
+      clearInterval(JSON.parse(localStorage.getItem("interval-id") || "{}"))
     }
 
     setTimerOn(!timerOn)
   }
 
-  const resetTime = ():void => {
-    console.log('resetting')
+  const resetTime = (): void => {
+    console.log("resetting")
     setDisplayTime(25 * 60)
     setBreakTime(5 * 60)
     setSessionTime(25 * 60)
     setTimerOn(false)
-    clearInterval(JSON.parse(localStorage.getItem('interval-id') || '{}'))
+    clearInterval(JSON.parse(localStorage.getItem("interval-id") || "{}"))
   }
 
   return (
