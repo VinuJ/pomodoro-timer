@@ -11,9 +11,9 @@ interface Props {
 }
 
 const App: FC = () => {
-  const [displayTime, setDisplayTime] = useState(1 * 10)
-  const [breakTime, setBreakTime] = useState(1 * 10)
-  const [sessionTime, setSessionTime] = useState(1 * 12)
+  const [displayTime, setDisplayTime] = useState(25 * 60)
+  const [breakTime, setBreakTime] = useState(5 * 60)
+  const [sessionTime, setSessionTime] = useState(25 * 60)
   const [timerOn, setTimerOn] = useState(false)
   const [onBreak, setOnBreak] = useState(false)
 
