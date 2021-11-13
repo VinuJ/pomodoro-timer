@@ -10,22 +10,20 @@ interface Props {
   formatTime: (time: number) => string
 }
 
+const soundUrl: string =
+"https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav"
+
 const App: FC = () => {
-  // const [displayTime, setDisplayTime] = useState(1 * 5)
-  // const [breakTime, setBreakTime] = useState(1 * 7)
-  // const [sessionTime, setSessionTime] = useState(25 * 60)
+  const [beepSound, setBeepSound] = useState(new Audio(soundUrl))
   const [displayTime, setDisplayTime] = useState(25 * 60)
   const [breakTime, setBreakTime] = useState(5 * 60)
   const [sessionTime, setSessionTime] = useState(25 * 60)
   const [timerOn, setTimerOn] = useState(false)
   const [onBreak, setOnBreak] = useState(false)
 
-  const soundUrl = 'https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav'
-  const beep = new Audio(soundUrl)
-
-  useEffect(() => {
+  useEffect((): void => {
     if (displayTime === 0) {
-      beep.play()
+      beepSound.play()
       if (!onBreak) {
         setDisplayTime(breakTime)
         setOnBreak(true)
@@ -34,7 +32,7 @@ const App: FC = () => {
         setOnBreak(false)
       }
     }
-  })
+  }, [displayTime])
 
   const formatTime = (time: number): string => {
     let minutes = Math.floor(time / 60) + ""
@@ -43,7 +41,7 @@ const App: FC = () => {
     return `${minutes.padStart(2, "0")}:${seconds.padStart(2, "0")}`
   }
 
-  const changeTime = (type: string, time: number) => {
+  const changeTime = (type: string, time: number): void => {
     if (type === "break") {
       if (breakTime <= 60 && time < 0) {
         return
@@ -89,17 +87,16 @@ const App: FC = () => {
     setTimerOn(!timerOn)
   }
 
-  const resetTime = (): void => {
-    beep.pause()
-    beep.currentTime = 0
+  const resetTime = () => {
+    beepSound.pause()
+    beepSound.currentTime = 0
     setDisplayTime(25 * 60)
     setBreakTime(5 * 60)
     setSessionTime(25 * 60)
     setTimerOn(false)
     clearInterval(JSON.parse(localStorage.getItem("interval-id") || "{}"))
+    return
   }
-
-
 
   return (
     <div className="page-wrapper">
@@ -114,9 +111,13 @@ const App: FC = () => {
       />
 
       <div className="timer-container">
-        <div className='break-message'>{(onBreak) ? 'Break time!' : 'Work time!'}</div>
+        <div className="break-message">
+          {onBreak ? "Break time!" : "Work time!"}
+        </div>
         <div id="timer-label">Time left:</div>
-        <div id="time-left" className="timer">{formatTime(displayTime)}</div>
+        <div id="time-left" className="timer">
+          {formatTime(displayTime)}
+        </div>
         <button
           id="start_stop"
           className="play-pause btn-small red darken-1"
